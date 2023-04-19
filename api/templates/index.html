@@ -49,7 +49,7 @@
 					data: JSON.stringify({'data': formData}),
 					dataType: 'json',
 					success: function(data) {
-						$('#result').html('<p>Prediction: ' + data.prediction + '</p><p>Probability: ' + data.probability + '</p>');
+						$('#result').html('<p>Prediction: ' + data+ '</p><p>Probability: ' + data.probability + '</p>');
 					},
 					error: function(xhr, textStatus, errorThrown) {
 						$('#result').html('<p>Error: ' + errorThrown + '</p>');

@@ -21,7 +21,7 @@ app = Flask(__name__, template_folder=os.path.abspath('templates'))
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('index2.html')
 
 @app.route('/predict2', methods=['POST'])
 def predict2():
@@ -39,11 +39,15 @@ def predict2():
     spark_df = spark_df.withColumn("Years", spark_df["Years"].cast(DoubleType()))
     spark_df = spark_df.withColumn("Num_Sites", spark_df["Num_Sites"].cast(DoubleType()))
     # Make the prediction using the trained model
-    prediction = model.transform(spark_df)
+    prediction = model.transform(spark_df).head()
+    app.logger.info('%s logged in successfully', prediction)
     # Convert the prediction result to a json string
-    result = prediction.select("prediction").toJSON().first()
+    #result = {'prediction': str(prediction.prediction), 'probability': str(prediction.probability[1])}
+    result = {'prediction': float(prediction.prediction), 'probability': float(prediction.probability[1])}
+
     # Return the prediction result as a json response
-    return jsonify({'prediction': result})
+    return jsonify(prediction=float(prediction.prediction), probability=float(prediction.probability[1]))
+
 
 
 @app.route('/predict', methods=['POST'])
@@ -60,9 +64,11 @@ def predict():
     pipeline = Pipeline(stages=[assembler, log_reg])
     
     df = spark.createDataFrame([data])
+    app.logger.info('%s logged in successfully', df)
     prediction = model.transform(df).head()
     result = {'prediction': str(prediction.prediction), 'probability': str(prediction.probability[1])}
     return jsonify(result), 200
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(debug=True, passthrough_errors=True,
+    use_debugger=False, use_reloader=False,host='0.0.0.0', port=5000)
