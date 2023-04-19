@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Churn Prediction App</title>
+</head>
+<body>
+	<h1>Churn Prediction App</h1>
+
+	<form id="prediction-form">
+		<label for="age">Age:</label>
+		<input type="number" name="age" required><br><br>
+
+		<label for="total_purchase">Total Purchase:</label>
+		<input type="number" name="total_purchase" required><br><br>
+
+		<label for="account_manager">Account Manager:</label>
+		<select name="account_manager">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</select><br><br>
+
+		<label for="years">Years:</label>
+		<input type="number" name="years" required><br><br>
+
+		<label for="num_sites">Number of Sites:</label>
+		<input type="number" name="num_sites" required><br><br>
+
+		<button type="submit">Predict Churn</button>
+	</form>
+
+	<div id="result"></div>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			$('#prediction-form').submit(function(event) {
+				event.preventDefault();
+				var formData = {
+					'Age': $('input[name=age]').val(),
+					'Total_Purchase': $('input[name=total_purchase]').val(),
+					'Account_Manager': $('select[name=account_manager]').val(),
+					'Years': $('input[name=years]').val(),
+					'Num_Sites': $('input[name=num_sites]').val()
+				};
+				$.ajax({
+					type: 'POST',
+					url: '/predict2',
+					contentType: 'application/json',
+					data: JSON.stringify({'data': formData}),
+					dataType: 'json',
+					success: function(data) {
+						$('#result').html('<p>Prediction: ' + data.prediction + '</p><p>Probability: ' + data.probability + '</p>');
+					},
+					error: function(xhr, textStatus, errorThrown) {
+						$('#result').html('<p>Error: ' + errorThrown + '</p>');
+					}
+				});
+			});
+		});
+	</script>
+</body>
+</html>

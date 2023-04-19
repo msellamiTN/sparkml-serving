@@ -1,0 +1,7 @@
+flask
+#pyspark
+#numpy
+#scipy
+#pandas
+findspark
+prometheus-client
