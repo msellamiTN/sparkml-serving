@@ -22,7 +22,7 @@ app = Flask(__name__, template_folder=os.path.abspath('templates'))
 @app.route('/')
 def home():
     return render_template('index2.html')
-
+#tester avec une intefrace web voir index2.html
 @app.route('/predict2', methods=['POST'])
 def predict2():
     # Get the input data as json
@@ -43,13 +43,13 @@ def predict2():
     app.logger.info('%s logged in successfully', prediction)
     # Convert the prediction result to a json string
     #result = {'prediction': str(prediction.prediction), 'probability': str(prediction.probability[1])}
-    result = {'prediction': float(prediction.prediction), 'probability': float(prediction.probability[1])}
+    #result = {'prediction': float(prediction.prediction), 'probability': float(prediction.probability[1])}
 
     # Return the prediction result as a json response
     return jsonify(prediction=float(prediction.prediction), probability=float(prediction.probability[1]))
 
 
-
+#tester avec postman/curl...
 @app.route('/predict', methods=['POST'])
 def predict():
     json_data = request.get_json()
